@@ -1,0 +1,373 @@
+import type { Lang } from './i18n'
+
+export interface DocSection {
+  id: string
+  icon: string
+  heading: string
+  blocks: Block[]
+}
+
+export type Block =
+  | { type: 'p'; text: string }
+  | { type: 'h2'; text: string; anchor?: string }
+  | { type: 'h3'; text: string; anchor?: string }
+  | { type: 'list'; items: string[] }
+  | { type: 'table'; headers: string[]; rows: string[][] }
+  | { type: 'callout'; variant: 'info' | 'warning' | 'tip'; text: string }
+  | { type: 'code'; lang: string; code: string }
+
+export function getSections(lang: Lang): DocSection[] {
+  return lang === 'ru' ? sectionsRu : sectionsEn
+}
+
+// ===================== RUSSIAN =====================
+const sectionsRu: DocSection[] = [
+  {
+    id: 'getting-started', icon: '🚀', heading: 'Начало работы',
+    blocks: [
+      { type: 'h2', text: 'Регистрация и первый вход', anchor: 'register' },
+      { type: 'p', text: 'Для начала работы с Jarvis вам необходимо получить учётную запись от администратора вашей организации (Owner). Администратор создаёт аккаунт и выдаёт логин и пароль.' },
+      { type: 'callout', variant: 'info', text: 'Войти можно по логину или email. Оба варианта работают на странице входа.' },
+      { type: 'h2', text: 'Обзор интерфейса', anchor: 'interface' },
+      { type: 'p', text: 'После входа вы увидите боковое меню (sidebar) с разделами. Набор доступных разделов зависит от вашей роли:' },
+      { type: 'table', headers: ['Роль', 'Описание', 'Доступ'], rows: [
+        ['Owner (Владелец)', 'Полный контроль над тенантом', 'Все разделы, управление сотрудниками, позициями'],
+        ['Manager (Менеджер)', 'Руководитель отдела', 'Все разделы, редактирование сотрудников (без удаления)'],
+        ['Employee (Сотрудник)', 'Рядовой сотрудник', 'Модули назначенные менеджером, свои данные, AI-чат'],
+      ]},
+      { type: 'h2', text: 'Dashboard', anchor: 'dashboard' },
+      { type: 'p', text: 'Главная страница показывает сводную статистику: количество лидов, сделок, документов и активных пользователей. Данные обновляются в реальном времени.' },
+      { type: 'h2', text: 'Переключение темы', anchor: 'theme' },
+      { type: 'p', text: 'В нижней части sidebar расположен переключатель темы: Светлая / Авто / Тёмная. Выбор сохраняется в браузере.' },
+    ],
+  },
+  {
+    id: 'staff', icon: '👥', heading: 'Управление сотрудниками',
+    blocks: [
+      { type: 'h2', text: 'Добавление сотрудника', anchor: 'add' },
+      { type: 'p', text: 'Перейдите в раздел «Сотрудники» → нажмите «+ Добавить сотрудника». Заполните:' },
+      { type: 'list', items: ['Имя — обязательно', 'Email — обязательно, уникальный', 'Пароль — если оставить пустым, будет сгенерирован автоматически', 'Роль — Сотрудник или Менеджер', 'Должность и Отдел — влияют на доступ AI к данным'] },
+      { type: 'callout', variant: 'warning', text: 'Пароль показывается только один раз при создании. Сохраните его сразу!' },
+      { type: 'h2', text: 'Редактирование', anchor: 'edit' },
+      { type: 'p', text: 'Нажмите «Изменить» напротив сотрудника. Можно изменить имя, email, должность, отдел. Owner может также изменить роль.' },
+      { type: 'h2', text: 'Удаление', anchor: 'delete' },
+      { type: 'p', text: 'Удалить сотрудника может только Owner. Нажмите «Удалить» — появится подтверждение. Удалить самого себя нельзя.' },
+      { type: 'callout', variant: 'info', text: 'Кнопка удаления не отображается для других владельцев (owner), только для сотрудников и менеджеров.' },
+      { type: 'h2', text: 'Назначение прав', anchor: 'permissions' },
+      { type: 'p', text: 'Чтобы дать сотруднику право редактировать других — назначьте ему роль «Менеджер». Менеджер может:' },
+      { type: 'list', items: ['Просматривать список сотрудников', 'Редактировать данные (кроме роли)', 'Просматривать пароли', 'Не может удалять сотрудников'] },
+    ],
+  },
+  {
+    id: 'ai', icon: '🤖', heading: 'AI-ассистент',
+    blocks: [
+      { type: 'h2', text: 'Как работает', anchor: 'how' },
+      { type: 'p', text: 'Jarvis AI — это большая языковая модель (LLM), которая получает данные вашей компании в качестве контекста при каждом запросе. Процесс:' },
+      { type: 'list', items: [
+        'Сотрудник отправляет сообщение в чат',
+        'Backend определяет должность и отдел сотрудника',
+        'Подгружаются данные компании, доступные этой должности',
+        'Данные передаются в AI-модель как контекст',
+        'Модель генерирует ответ на основе реальных данных',
+        'Ответ стримится по токенам в реальном времени (SSE)',
+      ]},
+      { type: 'h2', text: 'Доступ к данным по должности', anchor: 'access' },
+      { type: 'table', headers: ['Отдел / Должность', 'Доступные данные'], rows: [
+        ['Финансы / Бухгалтер', 'Финансовые отчёты, сделки, зарплаты сотрудников'],
+        ['Продажи / Менеджер', 'Лиды, сделки'],
+        ['Маркетинг', 'Маркетинговые стратегии, конкуренты, лиды'],
+        ['HR / Кадры', 'Данные сотрудников (без зарплат)'],
+        ['Руководство / CEO', 'Все данные компании'],
+        ['Консалтинг', 'Конкуренты, маркетинговые стратегии'],
+        ['Без назначенной должности', 'Нет доступа к данным компании'],
+      ]},
+      { type: 'callout', variant: 'tip', text: 'Доступ захардкожен на уровне backend. AI физически не получает данные, к которым у сотрудника нет доступа. Даже если попросить "покажи финансы" — модель не сможет, данных нет в контексте.' },
+      { type: 'h2', text: 'Безопасность', anchor: 'security' },
+      { type: 'p', text: 'Данные каждого тенанта полностью изолированы. Запросы фильтруются по tenant_id на уровне SQL. Сотрудник одной компании никогда не увидит данные другой.' },
+    ],
+  },
+  {
+    id: 'modules', icon: '📦', heading: 'Модули',
+    blocks: [
+      { type: 'h2', text: 'Лиды', anchor: 'leads' },
+      { type: 'p', text: 'Управление потенциальными клиентами. Каждый лид содержит: имя, email, телефон, компанию, источник, статус, ответственного менеджера. Статусы: new → contacted → qualified → won/lost.' },
+      { type: 'h2', text: 'Сделки', anchor: 'deals' },
+      { type: 'p', text: 'Pipeline сделок с суммами и стадиями. Стадии: qualification → proposal → negotiation → won/lost. Каждая сделка привязана к ответственному менеджеру.' },
+      { type: 'h2', text: 'Финансы', anchor: 'finance' },
+      { type: 'p', text: 'Финансовые отчёты: PnL (прибыли и убытки), баланс, ДДС (движение денежных средств), юнит-экономика. Данные хранятся в JSONB — AI может анализировать любые показатели.' },
+      { type: 'h2', text: 'Маркетинг', anchor: 'marketing' },
+      { type: 'p', text: 'Маркетинговые стратегии с каналами, бюджетами и целевой аудиторией. AI может генерировать стратегии и анализировать эффективность.' },
+      { type: 'h2', text: 'Конкуренты', anchor: 'competitors' },
+      { type: 'p', text: 'Карточки конкурентов: название, сайт, описание, сильные и слабые стороны, тарифы, продуктовая линейка. AI использует эти данные для сравнительного анализа.' },
+      { type: 'h2', text: 'Email и Контент', anchor: 'email' },
+      { type: 'p', text: 'Email-ассистент помогает писать и отвечать на письма. Модуль контента адаптирует одну статью в посты для разных платформ.' },
+      { type: 'h2', text: 'База знаний', anchor: 'knowledge' },
+      { type: 'p', text: 'Загружайте документы (PDF, Excel, текст) — они индексируются и используются AI при ответах через RAG (Retrieval-Augmented Generation).' },
+    ],
+  },
+  {
+    id: 'limits', icon: '📊', heading: 'Лимиты и квоты',
+    blocks: [
+      { type: 'h2', text: 'Лимиты по тарифам', anchor: 'by-plan' },
+      { type: 'table', headers: ['', 'Старт', 'Pro', 'Бизнес', 'MAX', 'Enterprise'], rows: [
+        ['AI-запросов/день', '200', '800', '3 000', '10 000', 'По SLA'],
+        ['Сотрудников', '15', '40', '100', '200', 'Безлимит'],
+        ['Хранилище', '500 MB', '3 GB', '15 GB', '50 GB', 'Безлимит'],
+        ['AI-модель', '8B shared', '14B shared', '14B + RAG', 'Своя fine-tuned', 'Своя fine-tuned'],
+        ['Своя ИИ-модель', 'Нет', 'Нет', 'Нет', 'Да', 'Да'],
+        ['Дообучение/мес', 'Нет', 'Нет', 'Нет', 'Да', 'Да'],
+        ['API-доступ', 'Нет', 'Нет', 'Да', 'Да', 'Да'],
+        ['Экспорт Excel', 'Нет', 'Да', 'Да', 'Да', 'Да'],
+      ]},
+      { type: 'h2', text: 'Превышение лимита', anchor: 'exceeded' },
+      { type: 'p', text: 'При достижении дневного лимита AI-запросов система вернёт сообщение «Лимит запросов исчерпан. Обновите тариф или дождитесь следующего дня». Лимиты сбрасываются ежедневно в 00:00 UTC.' },
+      { type: 'callout', variant: 'tip', text: 'Текущее использование квоты можно посмотреть на Dashboard в карточке «Использование AI».' },
+      { type: 'h2', text: 'Квота на сотрудников', anchor: 'staff-limit' },
+      { type: 'p', text: 'При попытке добавить сотрудника сверх лимита тарифа — система вернёт ошибку. Удалите неактивных сотрудников или обновите тариф.' },
+    ],
+  },
+  {
+    id: 'plans', icon: '💳', heading: 'Тарифы',
+    blocks: [
+      { type: 'h2', text: 'Сравнение тарифов', anchor: 'compare' },
+      { type: 'table', headers: ['', 'Старт', 'Pro', 'Бизнес', 'MAX', 'Enterprise'], rows: [
+        ['Цена/мес', '4 990 ₽', '12 990 ₽', '29 990 ₽', '99 990 ₽', 'По договору'],
+        ['Годовая скидка', '−10%', '−10%', '−10%', '−15%', 'По договору'],
+        ['Сотрудников', 'до 15', 'до 40', 'до 100', 'до 200', 'Безлимит'],
+        ['AI-модель', 'Shared 8B', 'Shared 14B', '14B + RAG', 'Своя fine-tuned 14B', 'Своя fine-tuned'],
+        ['Контекст', 'Базовый', 'Расширенный', 'Полный + документы', 'Полный + fine-tune', 'Полный + fine-tune'],
+        ['Поддержка', 'Email', 'Email', '24/7', 'Персональный менеджер', 'Выделенная команда'],
+      ]},
+      { type: 'h2', text: 'Старт — 4 990 ₽/мес', anchor: 'start' },
+      { type: 'p', text: 'Идеален для малого бизнеса и стартапов до 15 человек. AI-ассистент на быстрой модели (8B), базовый контекст компании в чате, CRM (лиды, сделки), email-поддержка.' },
+      { type: 'h2', text: 'Pro — 12 990 ₽/мес', anchor: 'pro' },
+      { type: 'p', text: 'Для растущих команд до 40 человек. Мощная модель (14B) с приоритетными ответами, расширенный контекст компании, экспорт в Excel.' },
+      { type: 'h2', text: 'Бизнес — 29 990 ₽/мес', anchor: 'business' },
+      { type: 'p', text: 'Полный набор для компаний до 100 сотрудников. RAG по загруженным документам (Excel, PDF, Word), полный контекст компании, анализ конкурентов, API-доступ, поддержка 24/7.' },
+      { type: 'h2', text: 'MAX — 99 990 ₽/мес', anchor: 'max' },
+      { type: 'callout', variant: 'tip', text: 'Ваша собственная ИИ-модель, заточенная под ваши запросы. Модель обучается на данных вашей компании и дообучается каждый месяц по новым данным с вашего согласования.' },
+      { type: 'p', text: 'Выделенный сервер с fine-tuned моделью (14B), обученной на ваших данных. Модель общается в стиле вашей компании, знает специфику бизнеса. Дообучение раз в месяц по новым данным с согласованием. Персональный менеджер, API-доступ.' },
+      { type: 'h2', text: 'Enterprise — по договору', anchor: 'enterprise' },
+      { type: 'callout', variant: 'tip', text: 'Ваша собственная ИИ-модель с настраиваемой мощностью fine-tune. Компонентная цена позволяет гибко подобрать конфигурацию.' },
+      { type: 'p', text: 'Для крупных компаний с особыми требованиями. Выделенный сервер, SLA 99.9%, кастомные интеграции, on-premise опция. Компонентная цена:' },
+      { type: 'table', headers: ['Компонент', 'Цена'], rows: [
+        ['Fine-tune по данным компании', '300 000 ₽'],
+        ['Мощности (150 сотр/мин)', '250 000 ₽/мес'],
+        ['Дообучение по новым данным', 'Включено'],
+        ['Fine-tune мощнее (70B модель)', '+200 000 ₽'],
+        ['Fine-tune слабее (7B модель)', '−100 000 ₽'],
+      ]},
+      { type: 'h2', text: 'Способы оплаты', anchor: 'payment' },
+      { type: 'list', items: ['Банковские карты (Visa, Mastercard, МИР)', 'СБП (Система Быстрых Платежей)', 'Безналичный расчёт для юрлиц (Enterprise)'] },
+    ],
+  },
+  {
+    id: 'api', icon: '🔗', heading: 'API',
+    blocks: [
+      { type: 'callout', variant: 'info', text: 'API доступен на тарифах Бизнес, MAX и Enterprise.' },
+      { type: 'h2', text: 'Авторизация', anchor: 'auth' },
+      { type: 'p', text: 'Все запросы требуют Bearer-токен в заголовке Authorization. Токен получается через эндпоинт логина.' },
+      { type: 'code', lang: 'bash', code: 'curl -X POST https://api.jarvis.ru/auth/login \\\n  -H "Content-Type: application/json" \\\n  -d \'{"login_or_email": "your_login", "password": "your_password"}\'' },
+      { type: 'h2', text: 'Чат с AI', anchor: 'chat' },
+      { type: 'code', lang: 'bash', code: 'curl -N https://api.jarvis.ru/api/chat/message \\\n  -H "Authorization: Bearer YOUR_TOKEN" \\\n  -H "Content-Type: application/json" \\\n  -d \'{"text": "Покажи сводку за квартал", "history": []}\'' },
+      { type: 'p', text: 'Ответ приходит как SSE (Server-Sent Events) — токены стримятся по мере генерации.' },
+      { type: 'h2', text: 'Лиды', anchor: 'leads-api' },
+      { type: 'code', lang: 'bash', code: '# Получить все лиды\ncurl https://api.jarvis.ru/api/leads?tenant_id=YOUR_TENANT_ID \\\n  -H "Authorization: Bearer YOUR_TOKEN"\n\n# Создать лид\ncurl -X POST https://api.jarvis.ru/api/leads \\\n  -H "Authorization: Bearer YOUR_TOKEN" \\\n  -H "Content-Type: application/json" \\\n  -d \'{"name": "Иван Иванов", "email": "ivan@company.ru", "company": "Company", "status": "new", "tenant_id": "YOUR_TENANT_ID"}\'' },
+      { type: 'h2', text: 'Rate limits', anchor: 'rate' },
+      { type: 'table', headers: ['Тариф', 'Запросов/мин', 'AI-запросов/день'], rows: [
+        ['Бизнес', '30', '3 000'],
+        ['MAX', '60', '10 000'],
+        ['Enterprise', '300', 'По SLA'],
+      ]},
+    ],
+  },
+  {
+    id: 'faq', icon: '❓', heading: 'FAQ',
+    blocks: [
+      { type: 'h2', text: 'Как добавить нового сотрудника?', anchor: 'faq-add' },
+      { type: 'p', text: 'Перейдите в раздел «Сотрудники» → «+ Добавить сотрудника». Нужна роль Owner или Manager.' },
+      { type: 'h2', text: 'Почему AI не видит мои данные?', anchor: 'faq-nodata' },
+      { type: 'p', text: 'Доступ AI зависит от вашей должности и отдела. Если они не заполнены — AI не получит данных компании. Попросите администратора указать вашу должность и отдел в настройках.' },
+      { type: 'h2', text: 'Данные в безопасности?', anchor: 'faq-security' },
+      { type: 'p', text: 'Да. Данные каждого тенанта изолированы на уровне базы данных (фильтрация по tenant_id). AI-модель не хранит данные между сессиями. Доступ к финансам ограничен по должностям.' },
+      { type: 'h2', text: 'Можно обучить модель на наших данных?', anchor: 'faq-finetune' },
+      { type: 'p', text: 'Да, на тарифе MAX. Мы делаем LoRA fine-tuning базовой модели на ваших данных — модель начинает отвечать в стиле вашей компании и лучше понимает специфику бизнеса.' },
+      { type: 'h2', text: 'Как изменить тариф?', anchor: 'faq-plan' },
+      { type: 'p', text: 'Свяжитесь с поддержкой или используйте раздел «Подписка» в настройках. Переход на более высокий тариф происходит мгновенно. При понижении — в конце текущего оплаченного периода.' },
+    ],
+  },
+]
+
+// ===================== ENGLISH =====================
+const sectionsEn: DocSection[] = [
+  {
+    id: 'getting-started', icon: '🚀', heading: 'Getting Started',
+    blocks: [
+      { type: 'h2', text: 'Registration and first login', anchor: 'register' },
+      { type: 'p', text: 'To start using Jarvis, you need to receive credentials from your organization admin (Owner). The admin creates your account and provides login and password.' },
+      { type: 'callout', variant: 'info', text: 'You can log in with either login or email. Both work on the login page.' },
+      { type: 'h2', text: 'Interface overview', anchor: 'interface' },
+      { type: 'p', text: 'After login you will see a sidebar with sections. Available sections depend on your role:' },
+      { type: 'table', headers: ['Role', 'Description', 'Access'], rows: [
+        ['Owner', 'Full tenant control', 'All sections, staff management, positions'],
+        ['Manager', 'Department head', 'All sections, edit staff (no deletion)'],
+        ['Employee', 'Regular employee', 'Assigned modules, personal data, AI chat'],
+      ]},
+      { type: 'h2', text: 'Dashboard', anchor: 'dashboard' },
+      { type: 'p', text: 'The main page shows summary statistics: leads, deals, documents and active users. Data updates in real-time.' },
+      { type: 'h2', text: 'Theme switching', anchor: 'theme' },
+      { type: 'p', text: 'At the bottom of the sidebar there is a theme switcher: Light / Auto / Dark. The choice is saved in the browser.' },
+    ],
+  },
+  {
+    id: 'staff', icon: '👥', heading: 'Staff Management',
+    blocks: [
+      { type: 'h2', text: 'Adding an employee', anchor: 'add' },
+      { type: 'p', text: 'Go to "Staff" section → click "+ Add employee". Fill in:' },
+      { type: 'list', items: ['Name — required', 'Email — required, unique', 'Password — leave empty to auto-generate', 'Role — Employee or Manager', 'Position and Department — affect AI data access'] },
+      { type: 'callout', variant: 'warning', text: 'The password is shown only once upon creation. Save it immediately!' },
+      { type: 'h2', text: 'Editing', anchor: 'edit' },
+      { type: 'p', text: 'Click "Edit" next to an employee. You can change name, email, position, department. Owners can also change the role.' },
+      { type: 'h2', text: 'Deletion', anchor: 'delete' },
+      { type: 'p', text: 'Only Owners can delete employees. Click "Delete" — a confirmation will appear. You cannot delete yourself.' },
+      { type: 'h2', text: 'Assigning permissions', anchor: 'permissions' },
+      { type: 'p', text: 'To give an employee the right to edit others — assign them the "Manager" role. Managers can:' },
+      { type: 'list', items: ['View the staff list', 'Edit employee data (except role)', 'View passwords', 'Cannot delete employees'] },
+    ],
+  },
+  {
+    id: 'ai', icon: '🤖', heading: 'AI Assistant',
+    blocks: [
+      { type: 'h2', text: 'How it works', anchor: 'how' },
+      { type: 'p', text: 'Jarvis AI is a large language model (LLM) that receives your company data as context with every request:' },
+      { type: 'list', items: [
+        'Employee sends a message in chat',
+        'Backend looks up employee position and department',
+        'Company data available to that position is loaded',
+        'Data is passed to the AI model as context',
+        'Model generates a response based on real data',
+        'Response is streamed token by token in real-time (SSE)',
+      ]},
+      { type: 'h2', text: 'Data access by position', anchor: 'access' },
+      { type: 'table', headers: ['Department / Position', 'Available data'], rows: [
+        ['Finance / Accountant', 'Financial reports, deals, employee salaries'],
+        ['Sales / Manager', 'Leads, deals'],
+        ['Marketing', 'Marketing strategies, competitors, leads'],
+        ['HR', 'Employee data (no salaries)'],
+        ['Executive / CEO', 'All company data'],
+        ['Consulting', 'Competitors, marketing strategies'],
+        ['No assigned position', 'No access to company data'],
+      ]},
+      { type: 'callout', variant: 'tip', text: 'Access is hardcoded at the backend level. The AI physically does not receive data that the employee has no access to. Even if asked "show finances" — the model cannot comply, the data is not in the context.' },
+      { type: 'h2', text: 'Security', anchor: 'security' },
+      { type: 'p', text: 'Each tenant\'s data is fully isolated. Queries are filtered by tenant_id at the SQL level. An employee of one company will never see another company\'s data.' },
+    ],
+  },
+  {
+    id: 'modules', icon: '📦', heading: 'Modules',
+    blocks: [
+      { type: 'h2', text: 'Leads', anchor: 'leads' },
+      { type: 'p', text: 'Manage potential customers. Each lead has: name, email, phone, company, source, status, assigned manager. Statuses: new → contacted → qualified → won/lost.' },
+      { type: 'h2', text: 'Deals', anchor: 'deals' },
+      { type: 'p', text: 'Deal pipeline with amounts and stages. Stages: qualification → proposal → negotiation → won/lost.' },
+      { type: 'h2', text: 'Finance', anchor: 'finance' },
+      { type: 'p', text: 'Financial reports: PnL, balance sheet, cash flow, unit economics. Data stored in JSONB — AI can analyze any metric.' },
+      { type: 'h2', text: 'Marketing', anchor: 'marketing' },
+      { type: 'p', text: 'Marketing strategies with channels, budgets, and target audience. AI can generate strategies and analyze effectiveness.' },
+      { type: 'h2', text: 'Competitors', anchor: 'competitors' },
+      { type: 'p', text: 'Competitor cards: name, website, description, strengths and weaknesses, pricing, product lineup.' },
+      { type: 'h2', text: 'Email & Content', anchor: 'email' },
+      { type: 'p', text: 'Email assistant helps write and reply to messages. Content module adapts one article into posts for different platforms.' },
+      { type: 'h2', text: 'Knowledge Base', anchor: 'knowledge' },
+      { type: 'p', text: 'Upload documents (PDF, Excel, text) — they are indexed and used by AI for answers via RAG (Retrieval-Augmented Generation).' },
+    ],
+  },
+  {
+    id: 'limits', icon: '📊', heading: 'Limits & Quotas',
+    blocks: [
+      { type: 'h2', text: 'Limits by plan', anchor: 'by-plan' },
+      { type: 'table', headers: ['', 'Start', 'Pro', 'Business', 'MAX', 'Enterprise'], rows: [
+        ['AI requests/day', '200', '800', '3,000', '10,000', 'Per SLA'],
+        ['Employees', '15', '40', '100', '200', 'Unlimited'],
+        ['Storage', '500 MB', '3 GB', '15 GB', '50 GB', 'Unlimited'],
+        ['AI model', '8B shared', '14B shared', '14B + RAG', 'Own fine-tuned', 'Own fine-tuned'],
+        ['Own AI model', 'No', 'No', 'No', 'Yes', 'Yes'],
+        ['Monthly retraining', 'No', 'No', 'No', 'Yes', 'Yes'],
+        ['API access', 'No', 'No', 'Yes', 'Yes', 'Yes'],
+        ['Excel export', 'No', 'Yes', 'Yes', 'Yes', 'Yes'],
+      ]},
+      { type: 'h2', text: 'Exceeding limits', anchor: 'exceeded' },
+      { type: 'p', text: 'When the daily AI request limit is reached, the system will return "Request limit reached. Upgrade your plan or wait until tomorrow." Limits reset daily at 00:00 UTC.' },
+      { type: 'h2', text: 'Staff quota', anchor: 'staff-limit' },
+      { type: 'p', text: 'When trying to add an employee beyond the plan limit, the system will return an error. Remove inactive employees or upgrade your plan.' },
+    ],
+  },
+  {
+    id: 'plans', icon: '💳', heading: 'Plans',
+    blocks: [
+      { type: 'h2', text: 'Plan comparison', anchor: 'compare' },
+      { type: 'table', headers: ['', 'Start', 'Pro', 'Business', 'MAX', 'Enterprise'], rows: [
+        ['Price/month', '4,990 ₽', '12,990 ₽', '29,990 ₽', '99,990 ₽', 'Custom'],
+        ['Annual discount', '−10%', '−10%', '−10%', '−15%', 'Custom'],
+        ['Employees', 'up to 15', 'up to 40', 'up to 100', 'up to 200', 'Unlimited'],
+        ['AI model', 'Shared 8B', 'Shared 14B', '14B + RAG', 'Own fine-tuned 14B', 'Own fine-tuned'],
+        ['Context', 'Basic', 'Extended', 'Full + documents', 'Full + fine-tune', 'Full + fine-tune'],
+        ['Support', 'Email', 'Email', '24/7', 'Personal manager', 'Dedicated team'],
+      ]},
+      { type: 'h2', text: 'Start — 4,990 ₽/month', anchor: 'start' },
+      { type: 'p', text: 'Ideal for small businesses and startups up to 15 people. AI assistant on a fast model (8B), basic company context in chat, CRM (leads, deals), email support.' },
+      { type: 'h2', text: 'Pro — 12,990 ₽/month', anchor: 'pro' },
+      { type: 'p', text: 'For growing teams up to 40 people. Powerful model (14B) with priority responses, extended company context, Excel export.' },
+      { type: 'h2', text: 'Business — 29,990 ₽/month', anchor: 'business' },
+      { type: 'p', text: 'Full feature set for companies up to 100 employees. RAG on uploaded documents (Excel, PDF, Word), full company context, competitor analysis, API access, 24/7 support.' },
+      { type: 'h2', text: 'MAX — 99,990 ₽/month', anchor: 'max' },
+      { type: 'callout', variant: 'tip', text: 'Your own AI model tailored to your needs. The model is trained on your company data and retrained monthly with new data upon your approval.' },
+      { type: 'p', text: 'Dedicated server with a fine-tuned model (14B) trained on your data. The model communicates in your company\'s style and knows your business specifics. Monthly retraining on new data with approval. Personal manager, API access.' },
+      { type: 'h2', text: 'Enterprise — custom pricing', anchor: 'enterprise' },
+      { type: 'callout', variant: 'tip', text: 'Your own AI model with configurable fine-tuning power. Component pricing allows flexible configuration.' },
+      { type: 'p', text: 'For large companies with special requirements. Dedicated server, SLA 99.9%, custom integrations, on-premise option. Component pricing:' },
+      { type: 'table', headers: ['Component', 'Price'], rows: [
+        ['Fine-tune on company data', '300,000 ₽'],
+        ['Capacity (150 employees/min)', '250,000 ₽/month'],
+        ['Monthly retraining', 'Included'],
+        ['Stronger fine-tune (70B model)', '+200,000 ₽'],
+        ['Lighter fine-tune (7B model)', '−100,000 ₽'],
+      ]},
+      { type: 'h2', text: 'Payment methods', anchor: 'payment' },
+      { type: 'list', items: ['Bank cards (Visa, Mastercard, MIR)', 'SBP (Fast Payment System)', 'Bank transfer for legal entities (Enterprise)'] },
+    ],
+  },
+  {
+    id: 'api', icon: '🔗', heading: 'API',
+    blocks: [
+      { type: 'callout', variant: 'info', text: 'API is available on Business, MAX and Enterprise plans.' },
+      { type: 'h2', text: 'Authorization', anchor: 'auth' },
+      { type: 'p', text: 'All requests require a Bearer token in the Authorization header. The token is obtained via the login endpoint.' },
+      { type: 'code', lang: 'bash', code: 'curl -X POST https://api.jarvis.ru/auth/login \\\n  -H "Content-Type: application/json" \\\n  -d \'{"login_or_email": "your_login", "password": "your_password"}\'' },
+      { type: 'h2', text: 'Chat with AI', anchor: 'chat' },
+      { type: 'code', lang: 'bash', code: 'curl -N https://api.jarvis.ru/api/chat/message \\\n  -H "Authorization: Bearer YOUR_TOKEN" \\\n  -H "Content-Type: application/json" \\\n  -d \'{"text": "Show quarterly summary", "history": []}\'' },
+      { type: 'p', text: 'Response is sent as SSE (Server-Sent Events) — tokens stream as they are generated.' },
+      { type: 'h2', text: 'Rate limits', anchor: 'rate' },
+      { type: 'table', headers: ['Plan', 'Requests/min', 'AI requests/day'], rows: [
+        ['Business', '30', '3,000'],
+        ['MAX', '60', '10,000'],
+        ['Enterprise', '300', 'Per SLA'],
+      ]},
+    ],
+  },
+  {
+    id: 'faq', icon: '❓', heading: 'FAQ',
+    blocks: [
+      { type: 'h2', text: 'How to add a new employee?', anchor: 'faq-add' },
+      { type: 'p', text: 'Go to "Staff" → "+ Add employee". You need the Owner or Manager role.' },
+      { type: 'h2', text: 'Why doesn\'t AI see my data?', anchor: 'faq-nodata' },
+      { type: 'p', text: 'AI access depends on your position and department. If they are not filled in, AI will not receive company data. Ask your admin to set your position and department.' },
+      { type: 'h2', text: 'Is my data secure?', anchor: 'faq-security' },
+      { type: 'p', text: 'Yes. Each tenant\'s data is isolated at the database level (filtered by tenant_id). The AI model does not store data between sessions.' },
+      { type: 'h2', text: 'Can you train the model on our data?', anchor: 'faq-finetune' },
+      { type: 'p', text: 'Yes, on the MAX plan. We do LoRA fine-tuning of the base model on your data — the model starts responding in your company\'s style.' },
+      { type: 'h2', text: 'How to change plan?', anchor: 'faq-plan' },
+      { type: 'p', text: 'Contact support or use the "Subscription" section in settings. Upgrading is instant. Downgrading takes effect at the end of the current paid period.' },
+    ],
+  },
+]
