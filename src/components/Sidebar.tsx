@@ -10,7 +10,7 @@ interface Props {
 export default function Sidebar({ sections, current, onSelect, onHome }: Props) {
   return (
     <aside className="sidebar">
-      <div className="sidebar-logo" onClick={() => window.location.href = 'http://localhost:5173'}>
+      <div className="sidebar-logo" onClick={() => window.location.href = '/'}>
         <span className="logo-text">JARVIS</span>
         <span className="logo-docs">docs</span>
       </div>
