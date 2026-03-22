@@ -16,8 +16,12 @@ export type Block =
   | { type: 'callout'; variant: 'info' | 'warning' | 'tip'; text: string }
   | { type: 'code'; lang: string; code: string }
 
+import { getLegalSections } from './legal'
+
 export function getSections(lang: Lang): DocSection[] {
-  return lang === 'ru' ? sectionsRu : sectionsEn
+  const docs = lang === 'ru' ? sectionsRu : sectionsEn
+  const legal = getLegalSections(lang)
+  return [...docs, ...legal]
 }
 
 // ===================== RUSSIAN =====================

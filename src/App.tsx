@@ -6,6 +6,7 @@ import { getSections } from './content'
 import Sidebar from './components/Sidebar'
 import DocsHome from './components/DocsHome'
 import DocPage from './components/DocPage'
+import ChatWidget from './components/ChatWidget'
 
 export default function App() {
   const [lang, setLang] = useState<Lang>(getStoredLang())
@@ -112,6 +113,7 @@ export default function App() {
           )}
         </div>
       </div>
+      <ChatWidget lang={lang} />
     </div>
   )
 }
