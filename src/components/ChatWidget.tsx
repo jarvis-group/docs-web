@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { Button, Input } from '@jarvis/ui'
-import type { Lang } from '@jarvis/shared'
+import { streamSSE, type Lang } from '@jarvis/shared'
 
 interface Props {
   lang: Lang
@@ -8,8 +8,6 @@ interface Props {
 }
 
 type Message = { role: 'user' | 'ai'; text: string }
-
-const API = import.meta.env.VITE_API_URL || ''
 
 export default function ChatWidget({ lang, t }: Props) {
   const [open, setOpen] = useState(false)
@@ -36,51 +34,33 @@ export default function ChatWidget({ lang, t }: Props) {
     setMessages(prev => [...prev, { role: 'user', text }])
     setLoading(true)
 
+    let aiText = ''
+    setMessages(prev => [...prev, { role: 'ai', text: '' }])
+
     try {
-      const res = await fetch(`${API}/api/chat/docs`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text, history, lang }),
+      await streamSSE('/api/chat/docs', { text, history, lang }, {
+        onToken: (token) => {
+          aiText += token
+          setMessages(prev => {
+            const copy = [...prev]
+            copy[copy.length - 1] = { role: 'ai', text: aiText }
+            return copy
+          })
+        },
+        onError: () => {
+          setMessages(prev => {
+            const copy = [...prev]
+            copy[copy.length - 1] = { role: 'ai', text: t('chat.error') }
+            return copy
+          })
+        },
       })
-
-      if (!res.ok) {
-        setMessages(prev => [...prev, { role: 'ai', text: t('chat.error') }])
-        setLoading(false)
-        return
-      }
-
-      const reader = res.body?.getReader()
-      const decoder = new TextDecoder()
-      let aiText = ''
-      setMessages(prev => [...prev, { role: 'ai', text: '' }])
-
-      if (reader) {
-        let buf = ''
-        while (true) {
-          const { done, value } = await reader.read()
-          if (done) break
-          buf += decoder.decode(value, { stream: true })
-          const lines = buf.split('\n')
-          buf = lines.pop() || ''
-          for (const line of lines) {
-            if (line.startsWith('data: ')) {
-              try {
-                const parsed = JSON.parse(line.slice(6))
-                if (parsed.text) {
-                  aiText += parsed.text
-                  setMessages(prev => {
-                    const copy = [...prev]
-                    copy[copy.length - 1] = { role: 'ai', text: aiText }
-                    return copy
-                  })
-                }
-              } catch { /* skip malformed */ }
-            }
-          }
-        }
-      }
     } catch {
-      setMessages(prev => [...prev, { role: 'ai', text: t('chat.offline') }])
+      setMessages(prev => {
+        const copy = [...prev]
+        copy[copy.length - 1] = { role: 'ai', text: t('chat.offline') }
+        return copy
+      })
     }
     setLoading(false)
   }
