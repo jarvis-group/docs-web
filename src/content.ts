@@ -1,20 +1,6 @@
-import type { Lang } from './i18n'
-
-export interface DocSection {
-  id: string
-  icon: string
-  heading: string
-  blocks: Block[]
-}
-
-export type Block =
-  | { type: 'p'; text: string }
-  | { type: 'h2'; text: string; anchor?: string }
-  | { type: 'h3'; text: string; anchor?: string }
-  | { type: 'list'; items: string[] }
-  | { type: 'table'; headers: string[]; rows: string[][] }
-  | { type: 'callout'; variant: 'info' | 'warning' | 'tip'; text: string }
-  | { type: 'code'; lang: string; code: string }
+import type { Lang, DocSection } from '@jarvis/shared'
+export type { DocSection }
+export type { Block } from '@jarvis/shared'
 
 import { getLegalSections } from './legal'
 

@@ -1,119 +1,82 @@
-import { useState, useEffect, useMemo } from 'react'
-import './App.css'
-import { applyTheme, getStoredTheme, storeTheme, type ThemeMode } from './theme'
-import { getStoredLang, storeLang, t, type Lang } from './i18n'
+import { useMemo } from 'react'
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom'
+import { PageShell, Toaster } from '@jarvis/ui'
+import type { SidebarItem } from '@jarvis/ui'
+import { useTranslation, useTheme, configureApi } from '@jarvis/shared'
 import { getSections } from './content'
-import Sidebar from './components/Sidebar'
-import DocsHome from './components/DocsHome'
-import DocPage from './components/DocPage'
+import { docsTranslations } from './translations'
+import DocsHome from './routes/home'
+import DocPageRoute from './routes/doc-page'
 import ChatWidget from './components/ChatWidget'
 
-export default function App() {
-  const [lang, setLang] = useState<Lang>(getStoredLang())
-  const [theme, setTheme] = useState<ThemeMode>(getStoredTheme())
-  const [currentSection, setCurrentSection] = useState<string | null>(null)
+const API = import.meta.env.VITE_API_URL || ''
+configureApi({ baseUrl: API })
+
+function AppContent() {
+  const { t, lang, toggleLang } = useTranslation('jarvis_docs_lang', docsTranslations)
+  const { icon: themeIcon, cycleTheme } = useTheme()
+  const navigate = useNavigate()
+  const location = useLocation()
 
   const sections = useMemo(() => getSections(lang), [lang])
 
-  useEffect(() => {
-    applyTheme(theme)
-  }, [theme])
+  // Derive current sectionId from URL path
+  const sectionId = location.pathname === '/' ? null : location.pathname.replace(/^\//, '')
 
-  // Hash-based routing
-  useEffect(() => {
-    const handleHash = () => {
-      const hash = window.location.hash.replace('#/', '').replace('#', '')
-      if (hash && sections.find(s => s.id === hash)) {
-        setCurrentSection(hash)
-      } else {
-        setCurrentSection(null)
-      }
-    }
-    handleHash()
-    window.addEventListener('hashchange', handleHash)
-    return () => window.removeEventListener('hashchange', handleHash)
-  }, [sections])
+  const sidebarItems: SidebarItem[] = useMemo(() => [
+    { id: '__home__', icon: '🏠', label: t('nav.home') },
+    ...sections.map(s => ({ id: s.id, icon: s.icon, label: s.heading })),
+  ], [sections, t])
 
-  const navigate = (id: string | null) => {
-    if (id) {
-      window.location.hash = `#/${id}`
-    } else {
-      window.location.hash = ''
-    }
-    setCurrentSection(id)
+  const handleNavigate = (id: string) => {
+    if (id === '__home__') navigate('/')
+    else navigate(`/${id}`)
     window.scrollTo(0, 0)
   }
 
-  const toggleLang = () => {
-    const next: Lang = lang === 'ru' ? 'en' : 'ru'
-    setLang(next)
-    storeLang(next)
-  }
-
-  const cycleTheme = () => {
-    const next: ThemeMode = theme === 'dark' ? 'light' : theme === 'light' ? 'system' : 'dark'
-    setTheme(next)
-    storeTheme(next)
-    applyTheme(next)
-  }
-
-  const themeIcon = theme === 'dark' ? '🌙' : theme === 'light' ? '☀️' : '◑'
-
-  const activeSection = sections.find(s => s.id === currentSection) ?? null
-
-  // Table of Contents for current section
-  const toc = activeSection
-    ? activeSection.blocks
-        .filter(b => b.type === 'h2')
-        .map(b => ({ text: (b as { text: string }).text, anchor: (b as { anchor?: string }).anchor ?? '' }))
-    : []
-
   return (
-    <div className="docs-layout">
-      <Sidebar
-        sections={sections}
-        current={currentSection}
-        onSelect={(id) => navigate(id)}
-        onHome={() => navigate(null)}
-      />
-
-      <div className="docs-main">
-        {/* Header */}
-        <header className="docs-header">
-          <div className="docs-header-left">
-            {currentSection && (
-              <button className="docs-back" onClick={() => navigate(null)}>
-                ← {t(lang, 'back')}
-              </button>
-            )}
-          </div>
-          <div className="docs-header-right">
-            <button className="header-btn" onClick={toggleLang}>{t(lang, 'lang.switch')}</button>
-            <button className="header-btn" onClick={cycleTheme}>{themeIcon}</button>
-          </div>
-        </header>
-
-        {/* Content */}
-        <div className="docs-content-area">
-          <div className="docs-content">
-            {activeSection ? <DocPage section={activeSection} /> : <DocsHome lang={lang} sections={sections} onSelect={(id) => navigate(id)} />}
-          </div>
-
-          {/* TOC */}
-          {activeSection && toc.length > 0 && (
-            <nav className="docs-toc">
-              <div className="toc-title">{lang === 'ru' ? 'На странице' : 'On this page'}</div>
-              {toc.map((item, i) => (
-                <a key={i} className="toc-link" href={`#${item.anchor}`} onClick={(e) => {
-                  e.preventDefault()
-                  document.getElementById(item.anchor)?.scrollIntoView({ behavior: 'smooth' })
-                }}>{item.text}</a>
-              ))}
-            </nav>
-          )}
+    <PageShell
+      sidebarItems={sidebarItems}
+      activeId={sectionId ?? '__home__'}
+      onNavigate={handleNavigate}
+      sidebarHeader={
+        <div className="cursor-pointer" onClick={() => { window.location.href = '/' }}>
+          <span className="text-lg font-extrabold bg-gradient-to-r from-accent to-accent-cyan bg-clip-text text-transparent">JARVIS</span>
+          <span className="text-xs font-medium text-foreground-muted ml-1.5">docs</span>
         </div>
-      </div>
-      <ChatWidget lang={lang} />
-    </div>
+      }
+      topbarLeft={
+        sectionId ? (
+          <button onClick={() => navigate('/')} className="text-sm text-foreground-secondary hover:text-accent transition-colors">
+            {t('back')}
+          </button>
+        ) : undefined
+      }
+      topbarRight={
+        <div className="flex items-center gap-2">
+          <button onClick={toggleLang} className="px-3 py-1 text-xs font-semibold border border-border rounded-md text-foreground-secondary hover:border-accent hover:text-accent transition-all">
+            {t('lang.switch')}
+          </button>
+          <button onClick={cycleTheme} className="px-3 py-1 text-xs font-semibold border border-border rounded-md text-foreground-secondary hover:border-accent hover:text-accent transition-all">
+            {themeIcon}
+          </button>
+        </div>
+      }
+    >
+      <Routes>
+        <Route index element={<DocsHome lang={lang} sections={sections} />} />
+        <Route path=":sectionId" element={<DocPageRoute lang={lang} sections={sections} />} />
+      </Routes>
+      <ChatWidget lang={lang} t={t} />
+      <Toaster />
+    </PageShell>
+  )
+}
+
+export default function App() {
+  return (
+    <Routes>
+      <Route path="/*" element={<AppContent />} />
+    </Routes>
   )
 }

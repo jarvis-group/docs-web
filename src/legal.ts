@@ -1,4 +1,4 @@
-import type { DocSection, Block } from './content'
+import type { DocSection } from '@jarvis/shared'
 
 // ===================== LEGAL DOCUMENTS (RU) =====================
 // В соответствии с ФЗ-152 «О персональных данных», ФЗ-149 «Об информации»,

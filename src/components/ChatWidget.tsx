@@ -1,39 +1,28 @@
 import { useState, useRef, useEffect } from 'react'
+import { Button, Input } from '@jarvis/ui'
+import type { Lang } from '@jarvis/shared'
 
-const API = import.meta.env.VITE_API_URL || ''
+interface Props {
+  lang: Lang
+  t: (key: string) => string
+}
 
 type Message = { role: 'user' | 'ai'; text: string }
 
-export default function ChatWidget({ lang }: { lang: 'ru' | 'en' }) {
+const API = import.meta.env.VITE_API_URL || ''
+
+export default function ChatWidget({ lang, t }: Props) {
   const [open, setOpen] = useState(false)
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
 
-  const t = (key: string) => {
-    const translations: Record<string, Record<string, string>> = {
-      ru: {
-        title: 'Jarvis AI',
-        subtitle: 'Спросите о возможностях Jarvis',
-        placeholder: 'Ваш вопрос...',
-        greeting: 'Привет! Я Jarvis AI. Задайте вопрос о платформе — тарифах, функциях, интеграциях.',
-      },
-      en: {
-        title: 'Jarvis AI',
-        subtitle: 'Ask about Jarvis features',
-        placeholder: 'Your question...',
-        greeting: 'Hi! I\'m Jarvis AI. Ask me about the platform — pricing, features, integrations.',
-      },
-    }
-    return translations[lang]?.[key] ?? key
-  }
-
   useEffect(() => {
     if (open && messages.length === 0) {
-      setMessages([{ role: 'ai', text: t('greeting') }])
+      setMessages([{ role: 'ai', text: t('chat.greeting') }])
     }
-  }, [open])
+  }, [open]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' })
@@ -55,7 +44,7 @@ export default function ChatWidget({ lang }: { lang: 'ru' | 'en' }) {
       })
 
       if (!res.ok) {
-        setMessages(prev => [...prev, { role: 'ai', text: lang === 'ru' ? 'Ошибка сервера' : 'Server error' }])
+        setMessages(prev => [...prev, { role: 'ai', text: t('chat.error') }])
         setLoading(false)
         return
       }
@@ -75,9 +64,8 @@ export default function ChatWidget({ lang }: { lang: 'ru' | 'en' }) {
           buf = lines.pop() || ''
           for (const line of lines) {
             if (line.startsWith('data: ')) {
-              const data = line.slice(6)
               try {
-                const parsed = JSON.parse(data)
+                const parsed = JSON.parse(line.slice(6))
                 if (parsed.text) {
                   aiText += parsed.text
                   setMessages(prev => {
@@ -86,13 +74,13 @@ export default function ChatWidget({ lang }: { lang: 'ru' | 'en' }) {
                     return copy
                   })
                 }
-              } catch {}
+              } catch { /* skip malformed */ }
             }
           }
         }
       }
     } catch {
-      setMessages(prev => [...prev, { role: 'ai', text: lang === 'ru' ? 'Не удалось подключиться' : 'Connection failed' }])
+      setMessages(prev => [...prev, { role: 'ai', text: t('chat.offline') }])
     }
     setLoading(false)
   }
@@ -101,91 +89,65 @@ export default function ChatWidget({ lang }: { lang: 'ru' | 'en' }) {
     <>
       {/* FAB button */}
       {!open && (
-        <button onClick={() => setOpen(true)} style={{
-          position: 'fixed', bottom: 24, right: 24, zIndex: 1000,
-          width: 56, height: 56, borderRadius: '50%',
-          background: 'linear-gradient(135deg, #6366f1, #0ea5e9)',
-          border: 'none', cursor: 'pointer', boxShadow: '0 4px 16px rgba(99,102,241,0.4)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: '1.5rem', color: 'white', transition: 'transform 0.2s',
-        }}
-          onMouseOver={e => e.currentTarget.style.transform = 'scale(1.1)'}
-          onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}>
+        <button
+          onClick={() => setOpen(true)}
+          className="fixed bottom-6 right-6 z-[1000] w-14 h-14 rounded-full bg-gradient-to-br from-accent to-accent-cyan border-none cursor-pointer shadow-lg flex items-center justify-center text-2xl text-white transition-transform hover:scale-110"
+        >
           💬
         </button>
       )}
 
       {/* Chat panel */}
       {open && (
-        <div style={{
-          position: 'fixed', bottom: 24, right: 24, zIndex: 1000,
-          width: 380, height: 520, borderRadius: 16,
-          background: 'var(--bg-secondary, #111827)',
-          border: '1px solid var(--border, #1e293b)',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
-          display: 'flex', flexDirection: 'column', overflow: 'hidden',
-        }}>
+        <div className="fixed bottom-6 right-6 z-[1000] w-[380px] h-[520px] rounded-xl bg-background-secondary border border-border shadow-lg flex flex-col overflow-hidden">
           {/* Header */}
-          <div style={{
-            padding: '0.75rem 1rem', borderBottom: '1px solid var(--border, #1e293b)',
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            background: 'linear-gradient(135deg, #6366f120, #0ea5e920)',
-          }}>
+          <div className="px-4 py-3 border-b border-border flex items-center justify-between bg-gradient-to-r from-accent/10 to-accent-cyan/10">
             <div>
-              <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--text-primary, #e2e8f0)' }}>{t('title')}</div>
-              <div style={{ fontSize: '0.7rem', color: 'var(--text-tertiary, #64748b)' }}>{t('subtitle')}</div>
+              <div className="font-bold text-sm text-foreground">{t('chat.title')}</div>
+              <div className="text-[0.7rem] text-foreground-muted">{t('chat.subtitle')}</div>
             </div>
-            <button onClick={() => setOpen(false)} style={{
-              background: 'none', border: 'none', color: 'var(--text-tertiary, #64748b)',
-              cursor: 'pointer', fontSize: '1.2rem', padding: '0.25rem',
-            }}>✕</button>
+            <button
+              onClick={() => setOpen(false)}
+              className="bg-transparent border-none text-foreground-muted cursor-pointer text-lg p-1 hover:text-foreground transition-colors"
+            >
+              &#10005;
+            </button>
           </div>
 
           {/* Messages */}
-          <div ref={scrollRef} style={{
-            flex: 1, overflowY: 'auto', padding: '0.75rem',
-            display: 'flex', flexDirection: 'column', gap: '0.5rem',
-          }}>
+          <div ref={scrollRef} className="flex-1 overflow-y-auto p-3 flex flex-col gap-2">
             {messages.map((msg, i) => (
-              <div key={i} style={{
-                alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start',
-                maxWidth: '85%', padding: '0.5rem 0.75rem', borderRadius: 12,
-                background: msg.role === 'user'
-                  ? 'linear-gradient(135deg, #6366f1, #4f46e5)'
-                  : 'var(--bg-tertiary, #1e293b)',
-                color: msg.role === 'user' ? 'white' : 'var(--text-primary, #e2e8f0)',
-                fontSize: '0.85rem', lineHeight: 1.5, whiteSpace: 'pre-wrap',
-              }}>
+              <div
+                key={i}
+                className={`max-w-[85%] px-3 py-2 rounded-xl text-sm leading-relaxed whitespace-pre-wrap ${
+                  msg.role === 'user'
+                    ? 'self-end bg-gradient-to-br from-accent to-bubble-user text-white'
+                    : 'self-start bg-background-tertiary text-foreground'
+                }`}
+              >
                 {msg.text || (loading && i === messages.length - 1 ? '...' : '')}
               </div>
             ))}
           </div>
 
           {/* Input */}
-          <div style={{
-            padding: '0.5rem 0.75rem', borderTop: '1px solid var(--border, #1e293b)',
-            display: 'flex', gap: '0.5rem',
-          }}>
-            <input
+          <div className="px-3 py-2 border-t border-border flex gap-2">
+            <Input
               value={input}
               onChange={e => setInput(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && send()}
-              placeholder={t('placeholder')}
+              onKeyDown={e => { if (e.key === 'Enter') send() }}
+              placeholder={t('chat.placeholder')}
               disabled={loading}
-              style={{
-                flex: 1, padding: '0.5rem 0.75rem', borderRadius: 8,
-                background: 'var(--bg-primary, #0b0f1a)',
-                border: '1px solid var(--border, #334155)',
-                color: 'var(--text-primary, #e2e8f0)',
-                fontSize: '0.85rem', outline: 'none',
-              }}
+              className="flex-1 text-sm"
             />
-            <button onClick={send} disabled={loading || !input.trim()} style={{
-              padding: '0.5rem 0.75rem', borderRadius: 8,
-              background: loading ? '#4338ca' : '#6366f1',
-              border: 'none', color: 'white', cursor: loading ? 'not-allowed' : 'pointer',
-              fontWeight: 600, fontSize: '0.85rem',
-            }}>→</button>
+            <Button
+              onClick={send}
+              disabled={loading || !input.trim()}
+              size="sm"
+              className="px-3"
+            >
+              &rarr;
+            </Button>
           </div>
         </div>
       )}
