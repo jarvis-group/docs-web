@@ -44,7 +44,7 @@ export default function DocPageRoute({ lang, sections }: Props) {
   return (
     <div className="flex flex-1">
       {/* Article */}
-      <article className="flex-1 max-w-[760px] px-8 py-10">
+      <article className="flex-1 max-w-[760px] px-4 sm:px-8 lg:px-12 py-6 lg:py-10">
         <h1 className="text-2xl font-extrabold mb-6 pb-4 border-b border-border">
           {section.icon} {section.heading}
         </h1>

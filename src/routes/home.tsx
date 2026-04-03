@@ -17,10 +17,10 @@ export default function DocsHome({ lang, sections }: Props) {
   void lang
 
   return (
-    <div className="px-8 py-12 max-w-[900px]">
+    <div className="max-w-[900px] px-4 sm:px-8 lg:px-12 py-8 lg:py-16">
       {/* Hero */}
       <div className="mb-10">
-        <h1 className="text-3xl font-extrabold mb-2 text-foreground">
+        <h1 className="text-2xl sm:text-[2.2rem] font-extrabold mb-2 text-foreground">
           {t('docs.title')}
         </h1>
         <p className="text-foreground-secondary text-lg">

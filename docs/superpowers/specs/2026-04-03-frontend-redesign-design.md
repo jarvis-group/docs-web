@@ -217,5 +217,5 @@ lg: 0 8px 24px rgba(0,0,0,0.3)
 - Command palette / keyboard shortcuts
 - Drag & drop
 - Offline mode
-- Light theme (Dark Corporate only)
+- Light theme (отложено — возможно добавим позже)
 - New features or pages beyond current functionality

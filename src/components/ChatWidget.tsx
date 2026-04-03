@@ -79,7 +79,7 @@ export default function ChatWidget({ lang, t }: Props) {
 
       {/* Chat panel */}
       {open && (
-        <div className="fixed bottom-6 right-6 z-[1000] w-[380px] h-[520px] rounded-xl bg-background-secondary border border-border shadow-lg flex flex-col overflow-hidden">
+        <div className="fixed z-[1000] bottom-0 right-0 w-full h-[100dvh] sm:bottom-6 sm:right-6 sm:w-[380px] sm:h-[520px] sm:rounded-xl bg-background-secondary border border-border shadow-lg flex flex-col overflow-hidden">
           {/* Header */}
           <div className="px-4 py-3 border-b border-border flex items-center justify-between bg-gradient-to-r from-accent/10 to-accent-cyan/10">
             <div>
