@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom'
-import { PageShell, Toaster, Logo } from '@jarvis/ui'
+import { PageShell, Toaster, Logo, ErrorBoundary } from '@jarvis/ui'
 import type { SidebarItem } from '@jarvis/ui'
 import { useTranslation, useTheme, configureApi } from '@jarvis/shared'
 import { getSections } from './content'
@@ -68,10 +68,13 @@ function AppContent() {
         </div>
       }
     >
+      <ErrorBoundary>
       <Routes>
         <Route index element={<DocsHome lang={lang} sections={sections} />} />
         <Route path=":sectionId" element={<DocPageRoute lang={lang} sections={sections} />} />
+        <Route path="*" element={<div className="flex items-center justify-center h-[60vh]"><h1 className="text-2xl text-muted-foreground">404 — Страница не найдена</h1></div>} />
       </Routes>
+      </ErrorBoundary>
       <ChatWidget lang={lang} t={t} />
       <Toaster />
     </PageShell>
