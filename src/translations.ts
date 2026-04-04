@@ -42,6 +42,9 @@ export const docsTranslations: Translations = {
     'chat.greeting': 'Привет! Я Jarvis AI. Задайте вопрос о платформе -- тарифах, функциях, интеграциях.',
     'chat.error': 'Ошибка сервера',
     'chat.offline': 'Не удалось подключиться',
+
+    // 404
+    'page.not_found': '404 — Страница не найдена',
   },
   en: {
     'docs.title': 'Documentation',
@@ -84,5 +87,8 @@ export const docsTranslations: Translations = {
     'chat.greeting': "Hi! I'm Jarvis AI. Ask me about the platform -- pricing, features, integrations.",
     'chat.error': 'Server error',
     'chat.offline': 'Connection failed',
+
+    // 404
+    'page.not_found': '404 — Page not found',
   },
 }

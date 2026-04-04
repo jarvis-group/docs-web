@@ -72,7 +72,7 @@ function AppContent() {
       <Routes>
         <Route index element={<DocsHome lang={lang} sections={sections} />} />
         <Route path=":sectionId" element={<DocPageRoute lang={lang} sections={sections} />} />
-        <Route path="*" element={<div className="flex items-center justify-center h-[60vh]"><h1 className="text-2xl text-muted-foreground">404 — Страница не найдена</h1></div>} />
+        <Route path="*" element={<div className="flex items-center justify-center h-[60vh]"><h1 className="text-2xl text-muted-foreground">{t('page.not_found') || '404 — Page not found'}</h1></div>} />
       </Routes>
       </ErrorBoundary>
       <ChatWidget lang={lang} t={t} />
