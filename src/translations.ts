@@ -43,6 +43,11 @@ export const docsTranslations: Translations = {
     'chat.error': 'Ошибка сервера',
     'chat.offline': 'Не удалось подключиться',
 
+    // Callout labels
+    'callout.info': 'Инфо',
+    'callout.warning': 'Внимание',
+    'callout.tip': 'Совет',
+
     // 404
     'page.not_found': '404 — Страница не найдена',
   },
@@ -87,6 +92,11 @@ export const docsTranslations: Translations = {
     'chat.greeting': "Hi! I'm Jarvis AI. Ask me about the platform -- pricing, features, integrations.",
     'chat.error': 'Server error',
     'chat.offline': 'Connection failed',
+
+    // Callout labels
+    'callout.info': 'Info',
+    'callout.warning': 'Warning',
+    'callout.tip': 'Tip',
 
     // 404
     'page.not_found': '404 — Page not found',

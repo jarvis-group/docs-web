@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { Button, Input } from '@jarvis/ui'
 import { streamSSE, type Lang } from '@jarvis/shared'
 
@@ -15,16 +15,25 @@ export default function ChatWidget({ lang, t }: Props) {
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
+  const greetingSent = useRef(false)
+  const abortRef = useRef<AbortController | null>(null)
 
   useEffect(() => {
-    if (open && messages.length === 0) {
+    if (open && messages.length === 0 && !greetingSent.current) {
+      greetingSent.current = true
       setMessages([{ role: 'ai', text: t('chat.greeting') }])
     }
-  }, [open]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [open, t, messages.length])
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' })
   }, [messages])
+
+  const handleClose = useCallback(() => {
+    abortRef.current?.abort()
+    abortRef.current = null
+    setOpen(false)
+  }, [])
 
   const send = async () => {
     if (!input.trim() || loading) return
@@ -36,6 +45,9 @@ export default function ChatWidget({ lang, t }: Props) {
 
     let aiText = ''
     setMessages(prev => [...prev, { role: 'ai', text: '' }])
+    abortRef.current?.abort()
+    const controller = new AbortController()
+    abortRef.current = controller
 
     try {
       await streamSSE('/api/chat/docs', { text, history, lang }, {
@@ -54,13 +66,16 @@ export default function ChatWidget({ lang, t }: Props) {
             return copy
           })
         },
-      })
-    } catch {
+      }, controller.signal)
+    } catch (e) {
+      if ((e as Error)?.name === 'AbortError') return
       setMessages(prev => {
         const copy = [...prev]
         copy[copy.length - 1] = { role: 'ai', text: t('chat.offline') }
         return copy
       })
+    } finally {
+      abortRef.current = null
     }
     setLoading(false)
   }
@@ -87,7 +102,7 @@ export default function ChatWidget({ lang, t }: Props) {
               <div className="text-[0.7rem] text-foreground-muted">{t('chat.subtitle')}</div>
             </div>
             <button
-              onClick={() => setOpen(false)}
+              onClick={handleClose}
               className="bg-transparent border-none text-foreground-muted cursor-pointer text-lg p-1 hover:text-foreground transition-colors"
             >
               &#10005;
@@ -98,7 +113,7 @@ export default function ChatWidget({ lang, t }: Props) {
           <div ref={scrollRef} className="flex-1 overflow-y-auto p-3 flex flex-col gap-2">
             {messages.map((msg, i) => (
               <div
-                key={i}
+                key={`${msg.role}-${i}`}
                 className={`max-w-[85%] px-3 py-2 rounded-xl text-sm leading-relaxed whitespace-pre-wrap ${
                   msg.role === 'user'
                     ? 'self-end bg-gradient-to-br from-accent to-bubble-user text-white'

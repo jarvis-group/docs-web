@@ -49,7 +49,7 @@ export default function DocPageRoute({ lang, sections }: Props) {
           {section.icon} {section.heading}
         </h1>
         {section.blocks.map((block, i) => (
-          <RenderBlock key={i} block={block} />
+          <RenderBlock key={i} block={block} t={t} />
         ))}
       </article>
 
@@ -81,12 +81,12 @@ export default function DocPageRoute({ lang, sections }: Props) {
 /* ---------- Block renderers ---------- */
 
 const calloutConfig = {
-  info: { icon: 'i', label: 'Info', border: 'border-l-accent', bg: 'bg-accent/5', iconBg: 'bg-accent', labelColor: 'text-accent' },
-  warning: { icon: '!', label: 'Warning', border: 'border-l-warning', bg: 'bg-warning/5', iconBg: 'bg-warning', labelColor: 'text-warning' },
-  tip: { icon: '\u2605', label: 'Tip', border: 'border-l-success', bg: 'bg-success/5', iconBg: 'bg-success', labelColor: 'text-success' },
+  info: { icon: 'i', labelKey: 'callout.info', border: 'border-l-accent', bg: 'bg-accent/5', iconBg: 'bg-accent', labelColor: 'text-accent' },
+  warning: { icon: '!', labelKey: 'callout.warning', border: 'border-l-warning', bg: 'bg-warning/5', iconBg: 'bg-warning', labelColor: 'text-warning' },
+  tip: { icon: '\u2605', labelKey: 'callout.tip', border: 'border-l-success', bg: 'bg-success/5', iconBg: 'bg-success', labelColor: 'text-success' },
 } as const
 
-function RenderBlock({ block }: { block: Block }) {
+function RenderBlock({ block, t }: { block: Block; t: (k: string) => string }) {
   switch (block.type) {
     case 'p':
       return <p className="text-foreground-secondary mb-4">{block.text}</p>
@@ -146,7 +146,7 @@ function RenderBlock({ block }: { block: Block }) {
           </span>
           <div>
             <div className={`font-bold text-xs uppercase tracking-wide mb-0.5 ${cfg.labelColor}`}>
-              {cfg.label}
+              {t(cfg.labelKey)}
             </div>
             <div className="text-foreground-secondary">{block.text}</div>
           </div>
