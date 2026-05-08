@@ -18,4 +18,14 @@ export default defineConfig({
       '@/': path.resolve(__dirname, '../packages/ui/src') + '/',
     },
   },
+  build: {
+    // R29 prod hardening: see user-web/vite.config.ts for rationale.
+    sourcemap: process.env.VITE_SOURCEMAP === 'true',
+    minify: 'terser',
+    terserOptions: {
+      compress: { drop_console: true, drop_debugger: true, passes: 2 },
+      mangle: { toplevel: true },
+      format: { comments: false },
+    },
+  },
 })
