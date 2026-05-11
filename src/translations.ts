@@ -3,7 +3,7 @@ import type { Translations } from '@jarvis/shared'
 export const docsTranslations: Translations = {
   ru: {
     'docs.title': 'Документация',
-    'docs.subtitle': 'Все, что нужно знать для работы с платформой Jarvis',
+    'docs.subtitle': 'Все, что нужно знать для работы с платформой Amadeus',
     'docs.search': 'Поиск...',
     'nav.home': 'Главная',
     'nav.getting-started': 'Начало работы',
@@ -36,10 +36,10 @@ export const docsTranslations: Translations = {
     'lang.switch': 'EN',
     'back': 'На главную',
     'toc.title': 'На странице',
-    'chat.title': 'Jarvis AI',
-    'chat.subtitle': 'Спросите о возможностях Jarvis',
+    'chat.title': 'Amadeus AI',
+    'chat.subtitle': 'Спросите о возможностях Amadeus',
     'chat.placeholder': 'Ваш вопрос...',
-    'chat.greeting': 'Привет! Я Jarvis AI. Задайте вопрос о платформе -- тарифах, функциях, интеграциях.',
+    'chat.greeting': 'Привет! Я Amadeus AI. Задайте вопрос о платформе -- тарифах, функциях, интеграциях.',
     'chat.error': 'Ошибка сервера',
     'chat.offline': 'Не удалось подключиться',
 
@@ -53,7 +53,7 @@ export const docsTranslations: Translations = {
   },
   en: {
     'docs.title': 'Documentation',
-    'docs.subtitle': 'Everything you need to know to work with the Jarvis platform',
+    'docs.subtitle': 'Everything you need to know to work with the Amadeus platform',
     'docs.search': 'Search...',
     'nav.home': 'Home',
     'nav.getting-started': 'Getting Started',
@@ -86,10 +86,10 @@ export const docsTranslations: Translations = {
     'lang.switch': 'RU',
     'back': 'Back to home',
     'toc.title': 'On this page',
-    'chat.title': 'Jarvis AI',
-    'chat.subtitle': 'Ask about Jarvis features',
+    'chat.title': 'Amadeus AI',
+    'chat.subtitle': 'Ask about Amadeus features',
     'chat.placeholder': 'Your question...',
-    'chat.greeting': "Hi! I'm Jarvis AI. Ask me about the platform -- pricing, features, integrations.",
+    'chat.greeting': "Hi! I'm Amadeus AI. Ask me about the platform -- pricing, features, integrations.",
     'chat.error': 'Server error',
     'chat.offline': 'Connection failed',
 

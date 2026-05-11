@@ -44,7 +44,7 @@ function AppContent() {
           <Logo size={collapsed ? 36 : 40} />
           {!collapsed && (
             <div className="flex items-baseline gap-1">
-              <span className="text-lg font-extrabold bg-gradient-to-r from-accent to-accent-cyan bg-clip-text text-transparent">JARVIS</span>
+              <span className="text-lg font-extrabold bg-gradient-to-r from-accent to-accent-cyan bg-clip-text text-transparent">AMADEUS</span>
               <span className="text-xs font-medium text-foreground-muted">docs</span>
             </div>
           )}

@@ -16,7 +16,7 @@ const sectionsRu: DocSection[] = [
     id: 'getting-started', icon: '🚀', heading: 'Начало работы',
     blocks: [
       { type: 'h2', text: 'Регистрация и первый вход', anchor: 'register' },
-      { type: 'p', text: 'Для начала работы с Jarvis вам необходимо получить учётную запись от администратора вашей организации (Owner). Администратор создаёт аккаунт и выдаёт логин и пароль.' },
+      { type: 'p', text: 'Для начала работы с Amadeus вам необходимо получить учётную запись от администратора вашей организации (Owner). Администратор создаёт аккаунт и выдаёт логин и пароль.' },
       { type: 'callout', variant: 'info', text: 'Войти можно по логину или email. Оба варианта работают на странице входа.' },
       { type: 'h2', text: 'Обзор интерфейса', anchor: 'interface' },
       { type: 'p', text: 'После входа вы увидите боковое меню (sidebar) с разделами. Набор доступных разделов зависит от вашей роли:' },
@@ -52,7 +52,7 @@ const sectionsRu: DocSection[] = [
     id: 'ai', icon: '🤖', heading: 'AI-ассистент',
     blocks: [
       { type: 'h2', text: 'Как работает', anchor: 'how' },
-      { type: 'p', text: 'Jarvis AI — это большая языковая модель (LLM), которая получает данные вашей компании в качестве контекста при каждом запросе. Процесс:' },
+      { type: 'p', text: 'Amadeus AI — это большая языковая модель (LLM), которая получает данные вашей компании в качестве контекста при каждом запросе. Процесс:' },
       { type: 'list', items: [
         'Сотрудник отправляет сообщение в чат',
         'Backend определяет должность и отдел сотрудника',
@@ -195,7 +195,7 @@ const sectionsRu: DocSection[] = [
     id: 'finance', icon: '💰', heading: 'Финансы и аналитика',
     blocks: [
       { type: 'h2', text: 'Бизнес-метрики', anchor: 'metrics' },
-      { type: 'p', text: 'Jarvis считает 14 метрик по формулам: ROI, ROAS, ROMI, CPA, CPL, CPC, CTR, LTV, CAC, LTV/CAC, маржа, точка безубыточности, срок окупаемости, churn.' },
+      { type: 'p', text: 'Amadeus считает 14 метрик по формулам: ROI, ROAS, ROMI, CPA, CPL, CPC, CTR, LTV, CAC, LTV/CAC, маржа, точка безубыточности, срок окупаемости, churn.' },
       { type: 'callout', variant: 'tip', text: 'Пример: «Посчитай ROI: потратили 500К, заработали 1.5М» → ROI = 200%' },
       { type: 'h2', text: 'Отчёты и сводки', anchor: 'reports' },
       { type: 'list', items: [
@@ -204,7 +204,7 @@ const sectionsRu: DocSection[] = [
         '«Настрой ежедневную сводку на 09:00» — автоматический утренний брифинг',
       ]},
       { type: 'h2', text: 'Финансовые отчёты из файлов', anchor: 'fin-files' },
-      { type: 'p', text: 'Загрузите Excel с финансами и скажите «Сделай финансовый отчёт за январь». Jarvis создаст Excel с тремя листами: доходы, расходы, сводка.' },
+      { type: 'p', text: 'Загрузите Excel с финансами и скажите «Сделай финансовый отчёт за январь». Amadeus создаст Excel с тремя листами: доходы, расходы, сводка.' },
     ],
   },
   {
@@ -220,14 +220,14 @@ const sectionsRu: DocSection[] = [
       { type: 'h2', text: 'Управление задачами', anchor: 'tasks' },
       { type: 'p', text: 'Создание, обновление задач с приоритетами и сроками. Пример: «Составь задачи на неделю: планёрка в 9, клиенты с 12 через час».' },
       { type: 'h2', text: 'Рекрутинг', anchor: 'recruiting' },
-      { type: 'p', text: 'Загрузите резюме (PDF/Word) в чат и скажите «Оцени это резюме на позицию менеджера». Jarvis проанализирует сильные/слабые стороны и даст рекомендацию.' },
+      { type: 'p', text: 'Загрузите резюме (PDF/Word) в чат и скажите «Оцени это резюме на позицию менеджера». Amadeus проанализирует сильные/слабые стороны и даст рекомендацию.' },
     ],
   },
   {
     id: 'marketing', icon: '📣', heading: 'Маркетинг и контент',
     blocks: [
       { type: 'h2', text: 'Адаптация контента', anchor: 'adapt' },
-      { type: 'p', text: '«Адаптируй текст для Telegram и Instagram» — Jarvis перепишет под формат каждой платформы. Каналы: Telegram, VK, Instagram, Email, Reels, YouTube, SMS.' },
+      { type: 'p', text: '«Адаптируй текст для Telegram и Instagram» — Amadeus перепишет под формат каждой платформы. Каналы: Telegram, VK, Instagram, Email, Reels, YouTube, SMS.' },
       { type: 'h2', text: 'Контент-план', anchor: 'content-plan' },
       { type: 'p', text: '«Составь контент-план на месяц, 5 постов в неделю» — план с темами, датами и черновиками для каждого поста.' },
       { type: 'h2', text: 'Коммерческие предложения', anchor: 'proposals' },
@@ -238,7 +238,7 @@ const sectionsRu: DocSection[] = [
     id: '1c', icon: '🏢', heading: 'Интеграция с 1С',
     blocks: [
       { type: 'h2', text: 'Подключение', anchor: '1c-setup' },
-      { type: 'p', text: 'Скажите «Подключи 1С» и укажите URL OData, логин и пароль. Jarvis проверит подключение и сохранит настройки.' },
+      { type: 'p', text: 'Скажите «Подключи 1С» и укажите URL OData, логин и пароль. Amadeus проверит подключение и сохранит настройки.' },
       { type: 'h2', text: 'Импорт данных', anchor: '1c-import' },
       { type: 'p', text: '«Загрузи все данные из 1С» — импорт контрагентов, сотрудников, договоров, номенклатуры, счетов, реализаций, банковских счетов, платежей.' },
       { type: 'h2', text: 'Работа через чат', anchor: '1c-chat' },
@@ -315,7 +315,7 @@ const sectionsEn: DocSection[] = [
     id: 'getting-started', icon: '🚀', heading: 'Getting Started',
     blocks: [
       { type: 'h2', text: 'Registration and first login', anchor: 'register' },
-      { type: 'p', text: 'To start using Jarvis, you need to receive credentials from your organization admin (Owner). The admin creates your account and provides login and password.' },
+      { type: 'p', text: 'To start using Amadeus, you need to receive credentials from your organization admin (Owner). The admin creates your account and provides login and password.' },
       { type: 'callout', variant: 'info', text: 'You can log in with either login or email. Both work on the login page.' },
       { type: 'h2', text: 'Interface overview', anchor: 'interface' },
       { type: 'p', text: 'After login you will see a sidebar with sections. Available sections depend on your role:' },
@@ -350,7 +350,7 @@ const sectionsEn: DocSection[] = [
     id: 'ai', icon: '🤖', heading: 'AI Assistant',
     blocks: [
       { type: 'h2', text: 'How it works', anchor: 'how' },
-      { type: 'p', text: 'Jarvis AI is a large language model (LLM) that receives your company data as context with every request:' },
+      { type: 'p', text: 'Amadeus AI is a large language model (LLM) that receives your company data as context with every request:' },
       { type: 'list', items: [
         'Employee sends a message in chat',
         'Backend looks up employee position and department',
