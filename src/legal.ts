@@ -8,8 +8,8 @@ export const legalSectionsRu: DocSection[] = [
   {
     id: 'terms', icon: '📜', heading: 'Пользовательское соглашение',
     blocks: [
-      { type: 'p', text: 'Настоящее Пользовательское соглашение (далее — «Соглашение») регулирует отношения между ИП/ООО «Джарвис» (далее — «Оператор», «мы») и пользователем сети Интернет (далее — «Пользователь», «вы»), возникающие при использовании платформы Jarvis (далее — «Платформа», «Сервис»), доступной по адресу jarvis.ai и через мобильное/десктопное приложение.' },
-      { type: 'p', text: 'Дата публикации: 22 марта 2026 г. Дата вступления в силу: 22 марта 2026 г.' },
+      { type: 'p', text: 'Настоящее Пользовательское соглашение (далее — «Соглашение») регулирует отношения между ООО «АИТ» (Амадеус ИИ Технологии, ОГРН 1262400006417, далее — «Оператор», «мы») и пользователем сети Интернет (далее — «Пользователь», «вы»), возникающие при использовании платформы Amadeus (далее — «Платформа», «Сервис»), доступной по адресу amadeusai.ru и через мобильное/десктопное приложение.' },
+      { type: 'p', text: 'BETA-DRAFT: даты публикации и вступления в силу будут проставлены при выходе из закрытой беты.' },
 
       { type: 'h2', text: '1. Общие положения', anchor: 'terms-general' },
       { type: 'list', items: [
@@ -112,14 +112,14 @@ export const legalSectionsRu: DocSection[] = [
   {
     id: 'privacy', icon: '🔒', heading: 'Политика конфиденциальности',
     blocks: [
-      { type: 'p', text: 'Настоящая Политика конфиденциальности (далее — «Политика») определяет порядок обработки и защиты персональных данных Пользователей Платформы Jarvis в соответствии с Федеральным законом от 27.07.2006 № 152-ФЗ «О персональных данных».' },
+      { type: 'p', text: 'Настоящая Политика конфиденциальности (далее — «Политика») определяет порядок обработки и защиты персональных данных Пользователей Платформы Amadeus в соответствии с Федеральным законом от 27.07.2006 № 152-ФЗ «О персональных данных».' },
       { type: 'p', text: 'Дата публикации: 22 марта 2026 г.' },
 
       { type: 'h2', text: '1. Оператор персональных данных', anchor: 'privacy-operator' },
       { type: 'list', items: [
-        'Наименование: ИП/ООО «Джарвис»',
+        'Наименование: ООО «АИТ» (Амадеус ИИ Технологии), ОГРН 1262400006417',
         'Адрес: [юридический адрес]',
-        'Email: privacy@jarvis.ai',
+        'Email: privacy@amadeusai.ru',
         'Регистрация в реестре операторов персональных данных Роскомнадзора: [номер]',
       ]},
 
@@ -176,7 +176,7 @@ export const legalSectionsRu: DocSection[] = [
         'Техническим подрядчикам, обеспечивающим работу инфраструктуры (хостинг-провайдеры), на основании договоров с требованиями по защите ПДн.',
         'С согласия Пользователя.',
       ]},
-      { type: 'callout', variant: 'tip', text: 'AI-модели Jarvis работают на собственных серверах Оператора. Данные Пользователя НЕ передаются во внешние AI-сервисы (OpenAI, Google и т.д.).' },
+      { type: 'callout', variant: 'tip', text: 'AI-модели Amadeus работают на собственных серверах Оператора. Данные Пользователя НЕ передаются во внешние AI-сервисы (OpenAI, Google и т.д.).' },
 
       { type: 'h2', text: '7. Права субъекта персональных данных', anchor: 'privacy-rights' },
       { type: 'p', text: 'В соответствии с ФЗ-152 вы имеете право:' },
@@ -187,7 +187,7 @@ export const legalSectionsRu: DocSection[] = [
         'Экспортировать свои данные из Платформы в машиночитаемом формате (XLSX).',
         'Обжаловать действия Оператора в Роскомнадзор или в суд.',
       ]},
-      { type: 'p', text: 'Для реализации своих прав направьте запрос на privacy@jarvis.ai. Срок ответа — 30 дней с момента получения запроса.' },
+      { type: 'p', text: 'Для реализации своих прав направьте запрос на privacy@amadeusai.ru. Срок ответа — 30 дней с момента получения запроса.' },
 
       { type: 'h2', text: '8. Обработка данных AI-ассистентом', anchor: 'privacy-ai' },
       { type: 'list', items: [
@@ -203,7 +203,7 @@ export const legalSectionsRu: DocSection[] = [
       { type: 'h2', text: '10. Контактная информация', anchor: 'privacy-contacts' },
       { type: 'list', items: [
         'Ответственный за обработку ПДн: [ФИО]',
-        'Email: privacy@jarvis.ai',
+        'Email: privacy@amadeusai.ru',
         'Адрес: [юридический адрес]',
         'Жалобы можно также направить в Роскомнадзор: https://rkn.gov.ru',
       ]},
@@ -216,7 +216,7 @@ export const legalSectionsRu: DocSection[] = [
       { type: 'p', text: 'Настоящим я, субъект персональных данных (далее — «Пользователь»), в соответствии со ст. 9 Федерального закона от 27.07.2006 № 152-ФЗ «О персональных данных», даю своё согласие на обработку моих персональных данных на следующих условиях:' },
 
       { type: 'h2', text: '1. Оператор', anchor: 'consent-operator' },
-      { type: 'p', text: 'ИП/ООО «Джарвис», адрес: [юридический адрес].' },
+      { type: 'p', text: 'ООО «АИТ» (Амадеус ИИ Технологии), ОГРН 1262400006417, адрес уточняется при выходе из беты.' },
 
       { type: 'h2', text: '2. Перечень данных', anchor: 'consent-data' },
       { type: 'list', items: [
@@ -230,7 +230,7 @@ export const legalSectionsRu: DocSection[] = [
 
       { type: 'h2', text: '3. Цели обработки', anchor: 'consent-purposes' },
       { type: 'list', items: [
-        'Предоставление доступа к Платформе Jarvis.',
+        'Предоставление доступа к Платформе Amadeus.',
         'Оказание услуг AI-ассистента.',
         'Коммуникация (уведомления, поддержка).',
         'Улучшение качества сервиса.',
@@ -243,11 +243,11 @@ export const legalSectionsRu: DocSection[] = [
       { type: 'p', text: 'Автоматизированная обработка с использованием средств вычислительной техники, а также без использования средств автоматизации.' },
 
       { type: 'h2', text: '6. Срок согласия', anchor: 'consent-term' },
-      { type: 'p', text: 'Настоящее согласие действует с момента его предоставления и до момента отзыва. Отзыв согласия осуществляется путём направления письменного уведомления на email: privacy@jarvis.ai.' },
+      { type: 'p', text: 'Настоящее согласие действует с момента его предоставления и до момента отзыва. Отзыв согласия осуществляется путём направления письменного уведомления на email: privacy@amadeusai.ru.' },
 
       { type: 'h2', text: '7. Порядок отзыва', anchor: 'consent-withdrawal' },
       { type: 'list', items: [
-        'Направьте заявление на privacy@jarvis.ai с указанием ФИО и email, зарегистрированного в системе.',
+        'Направьте заявление на privacy@amadeusai.ru с указанием ФИО и email, зарегистрированного в системе.',
         'Оператор прекращает обработку данных в течение 30 дней с момента получения отзыва.',
         'Отзыв согласия влечёт невозможность дальнейшего использования Платформы.',
         'Данные, необходимые для исполнения требований законодательства (бухгалтерский учёт), могут храниться в установленные законом сроки.',
@@ -285,7 +285,7 @@ export const legalSectionsRu: DocSection[] = [
         'Отключение функциональных cookies не повлияет на работу, но сбросит ваши настройки (тема, язык).',
       ]},
 
-      { type: 'callout', variant: 'info', text: 'Jarvis использует localStorage и sessionStorage браузера вместо традиционных cookies. Принцип работы и назначение аналогичны.' },
+      { type: 'callout', variant: 'info', text: 'Amadeus использует localStorage и sessionStorage браузера вместо традиционных cookies. Принцип работы и назначение аналогичны.' },
     ],
   },
 ]
@@ -296,7 +296,7 @@ export const legalSectionsEn: DocSection[] = [
   {
     id: 'terms', icon: '📜', heading: 'Terms of Service',
     blocks: [
-      { type: 'p', text: 'These Terms of Service (hereinafter — "Terms") govern the relationship between Jarvis LLC (hereinafter — "Operator", "we") and the Internet user (hereinafter — "User", "you") arising from the use of the Jarvis platform (hereinafter — "Platform", "Service").' },
+      { type: 'p', text: 'These Terms of Service (hereinafter — "Terms") govern the relationship between AIT LLC (Amadeus AI Technologies, OGRN 1262400006417, hereinafter — "Operator", "we") and the Internet user (hereinafter — "User", "you") arising from the use of the Amadeus platform (hereinafter — "Platform", "Service").' },
       { type: 'p', text: 'Published: March 22, 2026. Effective: March 22, 2026.' },
 
       { type: 'h2', text: '1. General provisions', anchor: 'terms-general' },
@@ -342,7 +342,7 @@ export const legalSectionsEn: DocSection[] = [
   {
     id: 'privacy', icon: '🔒', heading: 'Privacy Policy',
     blocks: [
-      { type: 'p', text: 'This Privacy Policy defines the procedure for processing and protecting personal data of Jarvis Platform Users in accordance with Federal Law No. 152-FZ "On Personal Data" dated July 27, 2006.' },
+      { type: 'p', text: 'This Privacy Policy defines the procedure for processing and protecting personal data of Amadeus Platform Users in accordance with Federal Law No. 152-FZ "On Personal Data" dated July 27, 2006.' },
 
       { type: 'h2', text: '1. Data we collect', anchor: 'privacy-data' },
       { type: 'list', items: [
@@ -370,7 +370,7 @@ export const legalSectionsEn: DocSection[] = [
         'Access, rectify, or delete your personal data.',
         'Export your data in machine-readable format.',
         'Withdraw consent for data processing.',
-        'Contact: privacy@jarvis.ai',
+        'Contact: privacy@amadeusai.ru',
       ]},
 
       { type: 'h2', text: '5. No cross-border transfer', anchor: 'privacy-cross-border' },
@@ -382,14 +382,14 @@ export const legalSectionsEn: DocSection[] = [
     id: 'consent', icon: '✅', heading: 'Consent for Personal Data Processing',
     blocks: [
       { type: 'p', text: 'By registering on the Platform and checking the consent checkbox, you agree to the processing of your personal data as described in the Privacy Policy.' },
-      { type: 'p', text: 'You may withdraw consent at any time by contacting privacy@jarvis.ai. Withdrawal will result in account deactivation within 30 days.' },
+      { type: 'p', text: 'You may withdraw consent at any time by contacting privacy@amadeusai.ru. Withdrawal will result in account deactivation within 30 days.' },
     ],
   },
 
   {
     id: 'cookies', icon: '🍪', heading: 'Cookie Policy',
     blocks: [
-      { type: 'p', text: 'Jarvis uses localStorage/sessionStorage for essential functionality (authentication, theme, language). We do not use tracking cookies, advertising cookies, or third-party analytics.' },
+      { type: 'p', text: 'Amadeus uses localStorage/sessionStorage for essential functionality (authentication, theme, language). We do not use tracking cookies, advertising cookies, or third-party analytics.' },
       { type: 'p', text: 'You can clear stored data in your browser settings. Clearing authentication data will require re-login.' },
     ],
   },
