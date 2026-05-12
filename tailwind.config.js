@@ -1,6 +1,6 @@
 import { createRequire } from 'module'
 const require = createRequire(import.meta.url)
-const baseConfig = require('../packages/ui/tailwind.config.ts')
+const baseConfig = require('../packages/ui/tailwind.config.js')
 
 /** @type {import('tailwindcss').Config} */
 export default {
